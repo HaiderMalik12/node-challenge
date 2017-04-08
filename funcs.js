@@ -59,11 +59,12 @@ findInbox = function (db, encodedName) {
     dir: path.dirname(db.file),
     messages: Object.keys(messages).reduce(function (acc, key) {
       if (messages[key].to === encodedName) {
-        return acc.concat({
+        let _acc =acc.concat({
           hash: key,
           lastHash: messages[key].last,
           from: messages[key].from
         })
+          return _acc;
       } else { return acc }
     }, [])
   }
@@ -74,21 +75,28 @@ findInbox = function (db, encodedName) {
  *
  * ({ messages: Array<Object> }, string): string
  */
-findNextMessage = function (inbox, lastHash) {
+findNextMessage = function (inbox, lastHash,cb) {
   // find the message which comes after lastHash
   var found
   for (var i = 0; i < inbox.messages.length; i += 1) {
     if (inbox.messages[i].lastHash === lastHash) {
       found = i
-      break
+      break;
     }
   }
+    
+    fs.readFile(path.join(inbox.dir, inbox.messages[found].hash), 'utf8',(err,data) => {
+      if(err) console.log(err);
 
-  // read and decode the message
-  return 'from: ' + decode(inbox.messages[found].from) + '\n---\n' +
-    decode(fs.readFile(path.join(inbox.dir, inbox.messages[found].hash), 'utf8'))
+        let from = 'from: ' + decode(inbox.messages[found].from) + '\n---\n';
+        let msg = decode(data);
+        cb(null,{from,msg});
+        
+    })
 }
 
+
+//expose these methods 
 module.exports = {
   findNextMessage,
   findInbox,

@@ -4,8 +4,8 @@ const {encodeName} = funcs;
 
 
 const session = {
-  username: process.argv[2],
-  lastMessageHash: process.argv[3]
+  username:  'bigbird88',
+  lastMessageHash:'60b725f10c9c85c70d97880dfe8191b3'
 }
 
 if (!session.username || !session.lastMessageHash) {
@@ -14,19 +14,23 @@ if (!session.username || !session.lastMessageHash) {
 }
 
 // 1. load the database
-var dbFile = path.join(__dirname, 'db', 'index.json')
+let dbFile = path.join(__dirname, 'db', 'index.json')
 funcs.loadDb(dbFile, function (err, db) {
 
   // 2. encode the name
-  var encoded = encodeName(session.usrename)
+  let encoded = encodeName(session.username);
 
   // 3. find the user's inbox
-  var inbox = funcs.findInbox(db, encoded)
+  let inbox = funcs.findInbox(db, encoded)
 
   // 4. find the next message
-  var nextMessage = funcs.findNextMessage(inbox, session.lastMessageHash)
+  funcs.findNextMessage(inbox, session.lastMessageHash,(err,output) =>{
+    if(err) console.log(err);
+    console.log('from',output.from);
+    console.log('msg',output.msg);
+  })
 
   // 5. print out the message.
   // Paste the console output into the "Solution" field and you're done!
-  console.log(nextMessage)
-})
+});
+
