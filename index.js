@@ -4,8 +4,8 @@ const {encodeName} = funcs;
 
 
 const session = {
-  username:  'bigbird88',
-  lastMessageHash:'60b725f10c9c85c70d97880dfe8191b3'
+  username:  process.argv[2],
+  lastMessageHash: process.argv[3]
 }
 
 if (!session.username || !session.lastMessageHash) {
