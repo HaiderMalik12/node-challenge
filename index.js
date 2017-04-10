@@ -6,7 +6,7 @@ const {encodeName} = funcs;
 const session = {
   username:  process.argv[2],
   lastMessageHash: process.argv[3]
-}
+};
 
 if (!session.username || !session.lastMessageHash) {
   console.log('Usage: node index.js <username> <hash>')

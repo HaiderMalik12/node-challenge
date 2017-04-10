@@ -80,14 +80,15 @@ findNextMessage = function (inbox, lastHash,cb) {
   var found
   for (var i = 0; i < inbox.messages.length; i += 1) {
     if (inbox.messages[i].lastHash === lastHash) {
-      found = i
+      found = i;
       break;
     }
   }
     
     fs.readFile(path.join(inbox.dir, inbox.messages[found].hash), 'utf8',(err,data) => {
-      if(err) console.log(err);
-
+        if(err) {
+          cb(err);
+      }
         let from = 'from: ' + decode(inbox.messages[found].from) + '\n---\n';
         let msg = decode(data);
         cb(null,{from,msg});
